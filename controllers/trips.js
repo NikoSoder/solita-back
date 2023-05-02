@@ -3,7 +3,7 @@ const tripsRouter = require("express").Router();
 const { Trip } = require("../models");
 
 tripsRouter.get("/", async (req, res) => {
-  const trips = await Trip.findAll({ limit: 20 });
+  const trips = await Trip.findAll({ limit: 10 });
   res.json(trips);
 });
 

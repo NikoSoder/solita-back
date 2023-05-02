@@ -1,5 +1,7 @@
 const express = require("express");
+const cors = require("cors");
 const app = express();
+app.use(cors());
 
 const { PORT } = require("./utils/config");
 const { connectToDatabase } = require("./utils/db");
