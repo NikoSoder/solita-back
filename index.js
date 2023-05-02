@@ -1,34 +1,22 @@
 const express = require("express");
-const config = require("./utils/config");
-const bodyParser = require("body-parser");
 const app = express();
 
-app.use(bodyParser.json());
-app.use(
-  bodyParser.urlencoded({
-    extended: true,
-  })
-);
+const { PORT } = require("./utils/config");
+const { connectToDatabase } = require("./utils/db");
 
-const Pool = require("pg").Pool;
-const pool = new Pool({
-  user: config.USER,
-  host: config.HOST,
-  database: config.DATABASE,
-  password: config.PASSWORD,
-  port: config.DATABASE_PORT,
-});
+const tripsRouter = require("./controllers/trips");
+const stationsRouter = require("./controllers/stations");
 
-app.get("/", (request, response) => {
-  pool.query("SELECT * FROM stations", (error, results) => {
-    if (error) {
-      throw error;
-    }
-    response.status(200).json(results.rows);
+app.use(express.json());
+
+app.use("/api/trips", tripsRouter);
+app.use("/api/stations", stationsRouter);
+
+const start = async () => {
+  await connectToDatabase();
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
   });
-});
+};
 
-const port = config.PORT || 3001;
-app.listen(port, () => {
-  console.log(`App running on port ${port}.`);
-});
+start();
