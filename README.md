@@ -10,11 +10,11 @@ Data:
 
 ## API endpoints
 
-| Method |        URL         |       Description |
-| :----- | :----------------: | ----------------: |
-| `GET`  |    `/api/trips`    |    get all trips. |
-| `GET`  |  `/api/trips/id`   |     get one trip. |
-| `GET`  |  `/api/stations`   | get all stations. |
-| `GET`  | `/api/stations/id` |  get one station. |
+| Method |           URL           |             Description |
+| :----- | :---------------------: | ----------------------: |
+| `GET`  |      `/api/trips`       |     get first 10 trips. |
+| `GET`  | `/api/trips/pageNumber` | get page with 10 trips. |
+| `GET`  |     `/api/stations`     |       get all stations. |
+| `GET`  |   `/api/stations/id`    |        get one station. |
 
 ## Installation

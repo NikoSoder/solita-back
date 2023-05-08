@@ -1,18 +1,31 @@
 const tripsRouter = require("express").Router();
-
 const { Trip } = require("../models");
+const limit = 10;
 
 tripsRouter.get("/", async (req, res) => {
-  const trips = await Trip.findAll({ limit: 10 });
-  res.json(trips);
+  try {
+    const totalPageCount = Math.trunc((await Trip.count()) / limit);
+    const trips = await Trip.findAll({ limit: 10, order: [["id", "ASC"]] });
+    res.json({ trips, totalPageCount });
+  } catch (error) {
+    console.error(error);
+  }
 });
 
-tripsRouter.get("/:id", async (req, res) => {
-  req.trip = await Trip.findByPk(req.params.id);
-  if (req.trip) {
-    res.json(req.trip);
-  } else {
-    res.status(404).end();
+tripsRouter.get("/:page", async (req, res) => {
+  const page = Number(req.params.page);
+  const rowsToSkip = page * limit;
+  const totalPageCount = Math.trunc((await Trip.count()) / limit);
+
+  try {
+    const trips = await Trip.findAll({
+      offset: rowsToSkip,
+      limit: limit,
+      order: [["id", "ASC"]],
+    });
+    res.json({ trips, totalPageCount });
+  } catch (error) {
+    console.error(error);
   }
 });
 
