@@ -29,4 +29,20 @@ tripsRouter.get("/:page", async (req, res) => {
   }
 });
 
+tripsRouter.get("/stats/:stationId", async (req, res) => {
+  const station = req.params.stationId;
+  try {
+    const departureCount = await Trip.count({
+      where: { departure_station_id: station },
+    });
+    const returnCount = await Trip.count({
+      where: { return_station_id: station },
+    });
+
+    res.json({ departureCount: departureCount, returnCount: returnCount });
+  } catch (error) {
+    console.error(error);
+  }
+});
+
 module.exports = tripsRouter;
