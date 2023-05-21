@@ -3,7 +3,7 @@ const stationsRouter = require("express").Router();
 const { Station } = require("../models");
 
 stationsRouter.get("/", async (req, res) => {
-  const stations = await Station.findAll({ limit: 20 });
+  const stations = await Station.findAll();
   res.json(stations);
 });
 
@@ -12,7 +12,7 @@ stationsRouter.get("/:id", async (req, res) => {
   if (req.station) {
     res.json(req.station);
   } else {
-    res.status(404).end();
+    res.status(404).json({ error: "Station not found" });
   }
 });
 
