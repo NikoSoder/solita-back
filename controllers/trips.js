@@ -3,16 +3,6 @@ const { Trip } = require("../models");
 const { Station } = require("../models");
 const limit = 10;
 
-tripsRouter.get("/", async (req, res) => {
-  try {
-    const totalPageCount = Math.trunc((await Trip.count()) / limit);
-    const trips = await Trip.findAll({ limit: 10, order: [["id", "ASC"]] });
-    res.json({ trips, totalPageCount });
-  } catch (error) {
-    console.error(error);
-  }
-});
-
 tripsRouter.get("/:page", async (req, res) => {
   const page = Number(req.params.page);
   try {

@@ -2,17 +2,6 @@ const request = require("supertest");
 const app = require("../index");
 
 describe("testing trips api requests", function () {
-  /* /api/trips */
-  it("should return first 10 trips and totalpagecount", async function () {
-    const response = await request(app)
-      .get("/api/trips")
-      .set("Accept", "application/json");
-
-    expect(response.status).toEqual(200);
-    expect(response.body.trips.length).toEqual(10);
-    expect(response.body.trips[0].id).toBe(1);
-    expect(response.body.totalPageCount).toBeDefined();
-  });
   /* /api/trips/page */
   it("should return second trips page and totapagecount", async function () {
     const response = await request(app)
