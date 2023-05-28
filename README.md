@@ -42,10 +42,10 @@ $ npm run dev
 
 | Method |             URL              |                              Description |
 | :----- | :--------------------------: | ---------------------------------------: |
-| `GET`  |         `/api/trips`         |     get first 10 trips, total page count |
 | `GET`  |   `/api/trips/pageNumber`    | get page with 10 trips, total page count |
 | `GET`  | `/api/trips/stats/stationId` |            departure count, return count |
 | `GET`  |       `/api/stations`        |                        get all stations. |
+| `GET`  |      `/api/statistics`       |               get five busiest stations. |
 
 ## Licenses
 
