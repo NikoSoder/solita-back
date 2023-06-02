@@ -40,12 +40,12 @@ $ npm run dev
 
 ## API endpoints
 
-| Method |             URL              |                              Description |
-| :----- | :--------------------------: | ---------------------------------------: |
-| `GET`  |   `/api/trips/pageNumber`    | get page with 10 trips, total page count |
-| `GET`  | `/api/trips/stats/stationId` |            departure count, return count |
-| `GET`  |       `/api/stations`        |                        get all stations. |
-| `GET`  |      `/api/statistics`       |               get five busiest stations. |
+| Method |                URL                 |                   Description |
+| :----- | :--------------------------------: | ----------------------------: |
+| `GET`  | `/api/trips?page=page&limit=limit` |   get trips, total page count |
+| `GET`  |    `/api/trips/stats/stationId`    | departure count, return count |
+| `GET`  |          `/api/stations`           |             get all stations. |
+| `GET`  |         `/api/statistics`          |    get five busiest stations. |
 
 ## Licenses
 
