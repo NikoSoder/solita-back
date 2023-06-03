@@ -3,7 +3,7 @@ const app = require("../index");
 
 describe("testing trips api requests", function () {
   /* /api/trips */
-  it("should return first 10 trips and totalpagecount", async function () {
+  it("should return first trips page and totapagecount", async function () {
     const response = await request(app)
       .get("/api/trips")
       .set("Accept", "application/json");
@@ -13,21 +13,11 @@ describe("testing trips api requests", function () {
     expect(response.body.trips[0].id).toBe(1);
     expect(response.body.totalPageCount).toBeDefined();
   });
-  /* /api/trips/page */
-  it("should return second trips page and totapagecount", async function () {
-    const response = await request(app)
-      .get("/api/trips/1")
-      .set("Accept", "application/json");
 
-    expect(response.status).toEqual(200);
-    expect(response.body.trips.length).toEqual(10);
-    expect(response.body.trips[0].id).toBe(11);
-    expect(response.body.totalPageCount).toBeDefined();
-  });
-  /* /api/trips/page */
+  /* /api/trips?page=-1 */
   it("should return 'Invalid page number' error message", async function () {
     const response = await request(app)
-      .get("/api/trips/-1")
+      .get("/api/trips?page=-1")
       .set("Accept", "application/json");
 
     expect(response.status).toEqual(400);
@@ -35,10 +25,11 @@ describe("testing trips api requests", function () {
     expect(response.body.totalPageCount).not.toBeDefined();
     expect(response.body.error).toBe("Invalid page number");
   });
-  /* /api/trips/page */
+
+  /* /api/trips?page=500000 */
   it("should return 'Invalid page number' error message", async function () {
     const response = await request(app)
-      .get("/api/trips/500000")
+      .get("/api/trips?page=500000")
       .set("Accept", "application/json");
 
     expect(response.status).toEqual(400);
@@ -47,6 +38,16 @@ describe("testing trips api requests", function () {
     expect(response.body.error).toBeDefined();
     expect(response.body.error).toBe("Invalid page number");
   });
+
+  /* /api/trips?page=0&limit=50 */
+  it("should return 50 trips", async function () {
+    const response = await request(app)
+      .get("/api/trips?page=0&limit=50")
+      .set("Accept", "application/json");
+    expect(response.status).toEqual(200);
+    expect(response.body.trips.length).toEqual(50);
+  });
+
   /* /api/trips/stats/stationId */
   it("should return info about station", async function () {
     const response = await request(app)
@@ -59,6 +60,7 @@ describe("testing trips api requests", function () {
     expect(response.body.departureCount).toBe(4930);
     expect(response.body.returnCount).toBe(5072);
   });
+
   /* /api/trips/stats/stationId */
   it("should return 'Invalid station id' error message", async function () {
     const response = await request(app)

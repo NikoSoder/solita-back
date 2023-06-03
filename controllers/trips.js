@@ -1,29 +1,21 @@
 const tripsRouter = require("express").Router();
 const { Trip } = require("../models");
 const { Station } = require("../models");
-const limit = 10;
+let LIMIT = 10;
+let PAGE = 0;
 
 tripsRouter.get("/", async (req, res) => {
+  PAGE = Number(req.query.page) || 0;
+  LIMIT = Number(req.query.limit) || 10;
   try {
-    const totalPageCount = Math.trunc((await Trip.count()) / limit);
-    const trips = await Trip.findAll({ limit: 10, order: [["id", "ASC"]] });
-    res.json({ trips, totalPageCount });
-  } catch (error) {
-    console.error(error);
-  }
-});
-
-tripsRouter.get("/:page", async (req, res) => {
-  const page = Number(req.params.page);
-  try {
-    const rowsToSkip = page * limit;
-    const totalPageCount = Math.trunc((await Trip.count()) / limit);
-    if (page < 0 || page > totalPageCount) {
+    const rowsToSkip = PAGE * LIMIT;
+    const totalPageCount = Math.trunc((await Trip.count()) / LIMIT);
+    if (PAGE < 0 || PAGE > totalPageCount) {
       throw new Error("Invalid page number");
     }
     const trips = await Trip.findAll({
       offset: rowsToSkip,
-      limit: limit,
+      limit: LIMIT,
       order: [["id", "ASC"]],
     });
     res.json({ trips, totalPageCount });
