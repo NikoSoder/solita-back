@@ -14,6 +14,13 @@ tripsRouter.get("/", async (req, res) => {
       throw new Error("Invalid page number");
     }
     const trips = await Trip.findAll({
+      attributes: [
+        "id",
+        "departure_station_name",
+        "return_station_name",
+        "covered_distance",
+        "duration",
+      ],
       offset: rowsToSkip,
       limit: LIMIT,
       order: [["id", "ASC"]],
