@@ -35,10 +35,14 @@ tripsRouter.get("/", async (req, res) => {
 tripsRouter.get("/stats/:stationId", async (req, res) => {
   const stationId = req.params.stationId;
   try {
-    const station = await Station.findOne({ where: { id: stationId } });
+    const station = await Station.findOne({
+      where: { id: stationId },
+      attributes: ["id", "nimi", "osoite", "x", "y"],
+    });
     if (!station) {
       throw new Error("Invalid station id");
     }
+
     const departureCount = await Trip.count({
       where: { departure_station_id: stationId },
     });
@@ -46,7 +50,13 @@ tripsRouter.get("/stats/:stationId", async (req, res) => {
       where: { return_station_id: stationId },
     });
 
-    res.json({ departureCount: departureCount, returnCount: returnCount });
+    res.json({
+      station: station,
+      statistics: {
+        departureCount: departureCount,
+        returnCount: returnCount,
+      },
+    });
   } catch (error) {
     console.error(error);
     res.status(404).json({ error: error.message });

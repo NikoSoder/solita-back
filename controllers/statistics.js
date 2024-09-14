@@ -4,6 +4,7 @@ const { sequelize } = require("../utils/db");
 statisticsRouter.get("/", async (req, res) => {
   const { QueryTypes } = require("sequelize");
   const busiestStations = await sequelize.query(
+    // TODO: ??? clean this up
     `SELECT station_id, station_name, COUNT(*) as num_journeys 
      FROM (SELECT departure_station_id AS station_id, departure_station_name AS station_name FROM trips 
      UNION ALL SELECT return_station_id AS station_id, return_station_name AS station_name FROM trips) 
