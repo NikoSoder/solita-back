@@ -17,4 +17,44 @@ statisticsRouter.get("/", async (req, res) => {
   res.json({ busiestStations: busiestStations });
 });
 
+statisticsRouter.get(
+  "/peaktime/station/:stationId/weekday/:weekDay",
+  async (req, res) => {
+    try {
+      const STATIONID = req.params.stationId;
+      const DAYOFTHEWEEK = req.params.weekDay;
+
+      const { QueryTypes } = require("sequelize");
+      const peakTimes = await sequelize.query(
+        `
+      SELECT
+        trips.departure_station_id AS station_id,
+        EXTRACT(DOW FROM CAST(trips.departure AS TIMESTAMP)) AS day_of_week,
+        EXTRACT(HOUR FROM CAST(trips.departure AS TIMESTAMP)) AS hour_of_day,
+        COUNT(trips.id) AS departures
+      FROM
+        trips
+      WHERE
+        trips.departure_station_id = ?
+      AND EXTRACT(DOW FROM CAST(trips.departure AS TIMESTAMP)) = ?
+        AND EXTRACT(HOUR FROM CAST(trips.departure AS TIMESTAMP)) BETWEEN 9 AND 21
+      GROUP BY
+        trips.departure_station_id, day_of_week, hour_of_day
+      ORDER BY
+        day_of_week, hour_of_day;
+      `,
+        {
+          replacements: [STATIONID, DAYOFTHEWEEK],
+          type: QueryTypes.SELECT,
+        }
+      );
+
+      res.json(peakTimes);
+    } catch (error) {
+      console.error(error.message);
+      res.status(400).json({ error: error.message });
+    }
+  }
+);
+
 module.exports = statisticsRouter;
